@@ -1,0 +1,25 @@
+services:
+  epaper-untis:
+    build:
+      context: ./epaper-untis
+    env_file:
+      - ./epaper-untis/env.env
+    ports:
+      - "71:71"
+    restart: unless-stopped
+
+  epaper-control:
+    build:
+      context: ./epaper-control
+    ports:
+      - "70:70"
+    restart: unless-stopped
+
+  epaper-imagegen:
+    build:
+      context: ./epaper-imagegen
+    volumes:
+      - ./epaper-imagegen:/app
+    ports:
+      - "72:72"
+    restart: unless-stopped
