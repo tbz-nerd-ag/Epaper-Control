@@ -1,4 +1,22 @@
+networks:
+  epaper-net:
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
+  default:
+    driver: bridge
+
 services:
+  epaper-control:
+    build:
+      context: ./epaper-control
+    ports:
+      - "70:70"
+    restart: unless-stopped
+    networks:
+      epaper-net:
+        ipv4_address: 172.20.0.1
+
   epaper-untis:
     build:
       context: ./epaper-untis
@@ -7,13 +25,9 @@ services:
     ports:
       - "71:71"
     restart: unless-stopped
-
-  epaper-control:
-    build:
-      context: ./epaper-control
-    ports:
-      - "70:70"
-    restart: unless-stopped
+    networks:
+      epaper-net:
+        ipv4_address: 172.20.0.2
 
   epaper-imagegen:
     build:
@@ -23,3 +37,21 @@ services:
     ports:
       - "72:72"
     restart: unless-stopped
+    networks:
+      epaper-net:
+        ipv4_address: 172.20.0.3
+  
+  mosquitto:
+    image: eclipse-mosquitto
+    ports:
+      - "1883:1883"
+      - "9001:9001"
+    volumes:
+      - ./epaper-control/mosquitto/config:/mosquitto/config
+      - ./epaper-control/mosquitto/data:/mosquitto/data
+      - ./epaper-control/mosquitto/log:/mosquitto/log
+    restart: unless-stopped
+    networks:
+      epaper-net:
+        ipv4_address: 172.20.0.4
+      default:
