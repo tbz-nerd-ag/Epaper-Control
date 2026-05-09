@@ -4,6 +4,7 @@ import (
 	"Control/handler"
 	"Control/mqtt"
 	"Control/untis"
+	"fmt"
 
 	"github.com/robfig/cron/v3"
 )
@@ -19,6 +20,7 @@ func main() {
 	c := cron.New()
 
 	c.AddFunc("*/2 * * * *", func() {
+		fmt.Println("Cron wird ausgeführt")
 		untis.Get_room_from_json()
 		handler.PrepareJSON()
 	})

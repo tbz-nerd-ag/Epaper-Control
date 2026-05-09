@@ -16,6 +16,7 @@ services:
     volumes:
       - ./epaper-control/untis:/root/untis
       - ./epaper-control/mqtt:/root/mqtt
+      - ./epaper-control/handler:/root/handler
     networks:
       epaper-net:
         ipv4_address: 172.20.0.2
