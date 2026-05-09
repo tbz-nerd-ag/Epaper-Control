@@ -91,7 +91,7 @@ func PrepareJSON() {
 
 }
 
-func getpicturehex() {
+func Getpicturehex() {
 	data, err := os.ReadFile("untis/room.json")
 	if err != nil {
 		panic(err)

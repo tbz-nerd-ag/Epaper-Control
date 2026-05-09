@@ -23,6 +23,7 @@ func main() {
 		fmt.Println("Cron wird ausgeführt")
 		untis.Get_room_from_json()
 		handler.PrepareJSON()
+		handler.Getpicturehex()
 	})
 
 	c.Start()
