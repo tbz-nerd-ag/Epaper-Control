@@ -100,6 +100,21 @@ func PrepareJSON() {
 			fmt.Println("Datei schreiben Err:", err)
 			return
 		}
+
+		// POST senden
+		httpResp, err = http.Post("http://172.20.0.4:72/image?room="+r.Room, "application/json", bytes.NewBuffer(formatted))
+		if err != nil {
+			fmt.Printf("POST Fehler %s: %v\n", r.Room, err)
+			continue
+		}
+		defer httpResp.Body.Close()
+
+		body, err = io.ReadAll(httpResp.Body)
+		if err != nil {
+			fmt.Printf("Antwort lesen Fehler: %v\n", err)
+			continue
+		}
+		fmt.Printf("Antwort für %s: %s\n", r.Room, string(body))
 	}
 
 }
