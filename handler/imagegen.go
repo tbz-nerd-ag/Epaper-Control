@@ -2,8 +2,11 @@ package handler
 
 import (
 	"Control/types"
+	"bytes"
 	"encoding/json"
 	"fmt"
+	"io"
+	"net/http"
 	"os"
 	"path/filepath"
 	"time"
@@ -19,7 +22,7 @@ type Lesson struct {
 	StartTime   string `json:"start_time"`
 	Subject     string `json:"subject"`
 	Teacher     string `json:"teacher"`
-	RoomChanged bool   `json:"room_changed,omitempty"`
+	RoomChanged bool   `json:"room_changed"`
 }
 
 type Response struct {
@@ -74,6 +77,21 @@ func PrepareJSON() {
 			fmt.Printf("Marshal Fehler %s: %v\n", r.Room, err)
 			continue
 		}
+
+		// POST senden
+		httpResp, err := http.Post("http://172.20.0.4:72/generate", "application/json", bytes.NewBuffer(formatted))
+		if err != nil {
+			fmt.Printf("POST Fehler %s: %v\n", r.Room, err)
+			continue
+		}
+		defer httpResp.Body.Close()
+
+		body, err := io.ReadAll(httpResp.Body)
+		if err != nil {
+			fmt.Printf("Antwort lesen Fehler: %v\n", err)
+			continue
+		}
+		fmt.Printf("Antwort für %s: %s\n", r.Room, string(body))
 
 		// Pfad zusammensetzen: "data/roomName.json"
 		filename := filepath.Join(outputDir, r.Room+".json")
