@@ -30,6 +30,11 @@ type Response struct {
 	Room    string   `json:"room"`
 }
 
+type ImageResponse struct {
+	Status string `json:"status"`
+	Image  string `json:"image"` // "0xff, 0xff, 0xff, ..."
+}
+
 const outputDir = "handler/cache/"
 const hexDir = "handler/image_hex/"
 
@@ -136,19 +141,20 @@ func Getpicturehex() {
 		}
 		defer httpResp.Body.Close()
 
-		body, err = io.ReadAll(httpResp.Body)
-		if err != nil {
-			fmt.Println("Fehler:", err)
+		// JSON parsen
+		var imgResp ImageResponse
+		if err := json.Unmarshal(body, &imgResp); err != nil {
+			fmt.Printf("JSON Parse Fehler: %v\n", err)
 			continue
 		}
 
-		filename := filepath.Join(hexDir, r.Room+".bin") // ← .bin statt .json
-		err = os.WriteFile(filename, body, 0644)
-		if err != nil {
-			fmt.Println("Datei schreiben Err:", err)
-			continue // ← return → continue
+		// Hex-String direkt speichern
+		filename := filepath.Join(hexDir, r.Room+".hex")
+		if err := os.WriteFile(filename, []byte(imgResp.Image), 0644); err != nil {
+			fmt.Printf("Schreiben Fehler: %v\n", err)
+			continue
 		}
-		fmt.Printf("Gespeichert: %s (%d Bytes)\n", filename, len(body))
+		fmt.Printf("Gespeichert: %s\n", filename)
 	}
 
 }
