@@ -13,6 +13,8 @@ services:
     ports:
       - "70:70"
     restart: unless-stopped
+    volumes:
+      - ./epaper-control/untis:/root/untis
     networks:
       epaper-net:
         ipv4_address: 172.20.0.2
