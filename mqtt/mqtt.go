@@ -61,7 +61,7 @@ func sendsleep(c mqtt.Client, id string) {
 	responseTopic := id + "/sleep"
 	sekunden := 10 * 60
 
-	send := c.Publish(responseTopic, 0, false, sekunden)
+	send := c.Publish(responseTopic, 0, false, fmt.Sprintf("%d", sekunden))
 	send.Wait()
 	fmt.Println("EPD geht schlafen")
 }

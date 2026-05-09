@@ -1,6 +1,7 @@
 package untis
 
 import (
+	"Control/types"
 	"encoding/json"
 	"fmt"
 	"net/http"
@@ -9,6 +10,22 @@ import (
 )
 
 const outputDir = "untis/cache/"
+
+func Get_room_from_json() {
+	data, err := os.ReadFile("untis/room.json")
+	if err != nil {
+		panic(err)
+	}
+
+	var rooms []types.Room
+	if err := json.Unmarshal(data, &rooms); err != nil {
+		panic(err)
+	}
+
+	for _, r := range rooms {
+		Get_data(r.Room)
+	}
+}
 
 func Get_data(room string) {
 	resp, err := http.Get("http://172.20.0.3:71/untis?room=" + room)
