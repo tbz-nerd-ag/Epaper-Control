@@ -10,7 +10,7 @@ import (
 
 func ConnecttoMQTT() {
 	opts := mqtt.NewClientOptions()
-	opts.AddBroker("tcp://localhost:1883")
+	opts.AddBroker("tcp://172.20.0.5:1883")
 	opts.SetClientID("Epaper-Control")
 
 	client := mqtt.NewClient(opts)
