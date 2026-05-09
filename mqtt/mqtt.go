@@ -2,6 +2,7 @@ package mqtt
 
 import (
 	"fmt"
+	"strconv"
 	"strings"
 	"time"
 
@@ -24,6 +25,7 @@ func ConnecttoMQTT() {
 
 func subscribe(client mqtt.Client) {
 	client.Subscribe("+/awake", 0, onAwake)
+	client.Subscribe("+/gn", 0, onGN)
 }
 
 func onAwake(c mqtt.Client, msg mqtt.Message) {
@@ -55,6 +57,24 @@ func onAwake(c mqtt.Client, msg mqtt.Message) {
 	} else {
 
 	}
+}
+
+func onGN(c mqtt.Client, msg mqtt.Message) {
+	// Payload: "goodnight,600"
+	parts := strings.Split(string(msg.Payload()), ",")
+	if len(parts) < 2 {
+		return
+	}
+
+	seconds, err := strconv.Atoi(parts[1])
+	if err != nil {
+		fmt.Printf("Fehler: %v\n", err)
+		return
+	}
+
+	fmt.Printf("ESP32 schläft für %d Sekunden\n", seconds)
+	wakeTime := time.Now().Add(time.Duration(seconds) * time.Second)
+	fmt.Printf("Wacht auf um: %s\n", wakeTime.Format("15:04:05"))
 }
 
 func sendsleep(c mqtt.Client, id string) {
