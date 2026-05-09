@@ -26,9 +26,6 @@ func Schedule() {
 	})
 
 	c.Start()
-
-	select {}
-
 }
 
 func Get_room_from_json() {
