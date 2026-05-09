@@ -11,7 +11,10 @@ cd ..
 git clone https://github.com/ingressy/Epaper-Control.git epaper-control
 cd epaper-control
 docker build -t epaper-control:v1 .
+
 cp docker-compose.yml /home/dockeruser/docker-compose.yml
+cp start.sh /home/dockeruser/start.sh
+
 cd ..
 
 docker compose up 
