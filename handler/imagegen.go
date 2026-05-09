@@ -141,20 +141,14 @@ func Getpicturehex() {
 			fmt.Println("Fehler:", err)
 			continue
 		}
-		fmt.Println("Antwort:", string(body))
 
-		formatted, err = json.MarshalIndent(body, "", "  ")
-		if err != nil {
-			fmt.Printf("Marshal Fehler %s: %v\n", r.Room, err)
-			continue
-		}
-
-		filename := filepath.Join(hexDir, r.Room+".json")
-		err = os.WriteFile(filename, formatted, 0644)
+		filename := filepath.Join(hexDir, r.Room+".bin") // ← .bin statt .json
+		err = os.WriteFile(filename, body, 0644)
 		if err != nil {
 			fmt.Println("Datei schreiben Err:", err)
-			return
+			continue // ← return → continue
 		}
+		fmt.Printf("Gespeichert: %s (%d Bytes)\n", filename, len(body))
 	}
 
 }
