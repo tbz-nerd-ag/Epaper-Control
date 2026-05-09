@@ -31,6 +31,7 @@ type Response struct {
 }
 
 const outputDir = "handler/cache/"
+const hexDir = "handler/image_hex/"
 
 func PrepareJSON() {
 	data, err := os.ReadFile("untis/room.json")
@@ -78,21 +79,6 @@ func PrepareJSON() {
 			continue
 		}
 
-		// POST senden
-		httpResp, err := http.Post("http://172.20.0.4:72/generate", "application/json", bytes.NewBuffer(formatted))
-		if err != nil {
-			fmt.Printf("POST Fehler %s: %v\n", r.Room, err)
-			continue
-		}
-		defer httpResp.Body.Close()
-
-		body, err := io.ReadAll(httpResp.Body)
-		if err != nil {
-			fmt.Printf("Antwort lesen Fehler: %v\n", err)
-			continue
-		}
-		fmt.Printf("Antwort für %s: %s\n", r.Room, string(body))
-
 		// Pfad zusammensetzen: "data/roomName.json"
 		filename := filepath.Join(outputDir, r.Room+".json")
 		err = os.WriteFile(filename, formatted, 0644)
@@ -101,6 +87,48 @@ func PrepareJSON() {
 			return
 		}
 
+	}
+
+}
+
+func getpicturehex() {
+	data, err := os.ReadFile("untis/room.json")
+	if err != nil {
+		panic(err)
+	}
+
+	var rooms []types.Room
+	if err := json.Unmarshal(data, &rooms); err != nil {
+		panic(err)
+	}
+
+	//create folder for image hex json
+	err = os.MkdirAll(hexDir, 0755)
+	if err != nil {
+		fmt.Println("Ordner erstellen Err:", err)
+		return
+	}
+
+	for _, r := range rooms {
+		formatted, err := os.ReadFile(filepath.Join(outputDir, r.Room+".json"))
+		if err != nil {
+			fmt.Printf("Cache nicht lesbar %s: %v\n", r.Room, err)
+			continue
+		}
+		// generate image
+		httpResp, err := http.Post("http://172.20.0.4:72/generate", "application/json", bytes.NewBuffer(formatted))
+		if err != nil {
+			fmt.Printf("POST Fehler %s: %v\n", r.Room, err)
+			continue
+		}
+		defer httpResp.Body.Close()
+		body, err := io.ReadAll(httpResp.Body)
+		if err != nil {
+			fmt.Printf("Antwort lesen Fehler: %v\n", err)
+			continue
+		}
+
+		// get image hex
 		httpResp, err = http.Get("http://172.20.0.4:72/image?room=" + r.Room)
 		if err != nil {
 			fmt.Println("Fehler:", err)
@@ -114,6 +142,19 @@ func PrepareJSON() {
 			continue
 		}
 		fmt.Println("Antwort:", string(body))
+
+		formatted, err = json.MarshalIndent(body, "", "  ")
+		if err != nil {
+			fmt.Printf("Marshal Fehler %s: %v\n", r.Room, err)
+			continue
+		}
+
+		filename := filepath.Join(hexDir, r.Room+".json")
+		err = os.WriteFile(filename, formatted, 0644)
+		if err != nil {
+			fmt.Println("Datei schreiben Err:", err)
+			return
+		}
 	}
 
 }
