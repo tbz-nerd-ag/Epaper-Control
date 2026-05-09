@@ -15,6 +15,7 @@ services:
     restart: unless-stopped
     volumes:
       - ./epaper-control/untis:/root/untis
+      - ./epaper-control/mqtt:/root/mqtt
     networks:
       epaper-net:
         ipv4_address: 172.20.0.2
