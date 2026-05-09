@@ -1,12 +1,13 @@
 package main
 
 import (
+	"Control/mqtt"
 	"Control/untis"
 )
 
 func main() {
 	untis.Schedule()
-	//mqtt.ConnecttoMQTT()
+	mqtt.ConnecttoMQTT()
 	//untis.Get_room_from_json()
 
 }
