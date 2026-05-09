@@ -141,7 +141,7 @@ func Getpicturehex() {
 		}
 		defer httpResp.Body.Close()
 
-		body, err := io.ReadAll(httpResp.Body) // ← GET Body lesen!
+		body, err := io.ReadAll(httpResp.Body)
 		if err != nil {
 			fmt.Printf("Antwort lesen Fehler: %v\n", err)
 			continue

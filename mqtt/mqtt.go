@@ -2,6 +2,8 @@ package mqtt
 
 import (
 	"fmt"
+	"os"
+	"path/filepath"
 	"strconv"
 	"strings"
 	"time"
@@ -37,7 +39,7 @@ func onAwake(c mqtt.Client, msg mqtt.Message) {
 
 	fmt.Printf("EPD %s ist wach!\n", id)
 	time.Sleep(5 * time.Second)
-	wartung := true
+	wartung := false
 	if wartung {
 		imageData, err := loadImage("mqtt/wartung.png")
 
@@ -55,7 +57,29 @@ func onAwake(c mqtt.Client, msg mqtt.Message) {
 		time.Sleep(5 * time.Second)
 		sendsleep(c, id)
 	} else {
+		hexDir := "handler/image_hex"
+		data, err := os.ReadFile(filepath.Join(hexDir, "2.105.hex"))
+		if err != nil {
+			fmt.Print("Hex nicht lesbar: %w", err)
+		}
 
+		// Hex-String → []byte
+		parts := strings.Split(string(data), ", ")
+		imageBytes := make([]byte, len(parts))
+		for i, p := range parts {
+			p = strings.TrimSpace(p)
+			val, err := strconv.ParseUint(strings.TrimPrefix(p, "0x"), 16, 8)
+			if err != nil {
+				fmt.Print("Hex nicht lesbar: %w", err)
+			}
+			imageBytes[i] = byte(val)
+		}
+		fmt.Printf("Sende %d Bytes an %s/image\n", len(imageBytes), id)
+
+		// Per MQTT senden
+		topic := id + "/image"
+		token := c.Publish(topic, 0, false, imageBytes)
+		token.Wait()
 	}
 }
 
