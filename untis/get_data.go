@@ -11,7 +11,7 @@ import (
 const outputDir = "untis/cache/"
 
 func Get_data(room string) {
-	resp, err := http.Get("http://127.0.0.1:71/untis?room=" + room)
+	resp, err := http.Get("http://172.20.0.3:71/untis?room=" + room)
 	if err != nil {
 		fmt.Println("Untis Mircoservice nicht erreichbar,", err)
 		return
