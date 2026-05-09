@@ -1,7 +1,7 @@
 package handler
 
 import (
-	"Control/untis"
+	"Control/types"
 	"encoding/json"
 	"fmt"
 	"os"
@@ -27,19 +27,15 @@ type Response struct {
 	Room    string   `json:"room"`
 }
 
-type Room struct {
-	Room string `json:"room"`
-}
-
 const outputDir = "handler/cache/"
 
-func PrepareJSON(raum string) {
+func PrepareJSON() {
 	data, err := os.ReadFile("untis/room.json")
 	if err != nil {
 		panic(err)
 	}
 
-	var rooms []Room
+	var rooms []types.Room
 	if err := json.Unmarshal(data, &rooms); err != nil {
 		panic(err)
 	}
@@ -54,7 +50,7 @@ func PrepareJSON(raum string) {
 	for _, r := range rooms {
 		data, err := os.ReadFile("untis/cache/" + r.Room + ".json")
 		if err != nil {
-			untis.Get_data(raum)
+			continue
 		}
 
 		var resp Response
