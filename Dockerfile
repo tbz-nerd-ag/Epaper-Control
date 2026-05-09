@@ -14,6 +14,7 @@ RUN apk add --no-cache tzdata
 ENV TZ=Europe/Berlin
 
 WORKDIR /root/
+COPY untis/room.json /root/untis/room.json
 COPY --from=builder /app/main .
 
 EXPOSE 70
