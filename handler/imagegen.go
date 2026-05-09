@@ -101,7 +101,7 @@ func PrepareJSON() {
 			return
 		}
 
-		httpResp, err = http.Get("http://172.20.0.3:72/image?room=" + r.Room)
+		httpResp, err = http.Get("http://172.20.0.4:72/image?room=" + r.Room)
 		if err != nil {
 			fmt.Println("Fehler:", err)
 			continue
