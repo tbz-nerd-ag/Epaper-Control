@@ -66,8 +66,9 @@ func PrepareJSON() {
 		if err := json.Unmarshal(data, &resp); err != nil {
 			return
 		}
-
-		today := now().Format("2006-01-02")
+		//time cheat
+		//today := now().Format("2006-01-02")
+		today := time.Now().Format("2006-01-02")
 
 		filtered := []Lesson{}
 		for _, lesson := range resp.Lessons {
@@ -147,7 +148,7 @@ func Getpicturehex() {
 			continue
 		}
 
-		fmt.Printf("Raw Antwort:", body)
+		//fmt.Printf("Raw Antwort:", body)
 
 		// JSON parsen
 		var imgResp ImageResponse
