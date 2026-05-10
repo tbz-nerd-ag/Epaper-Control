@@ -80,6 +80,9 @@ func onAwake(c mqtt.Client, msg mqtt.Message) {
 		topic := id + "/image"
 		token := c.Publish(topic, 0, false, imageBytes)
 		token.Wait()
+
+		time.Sleep(5 * time.Second)
+		sendsleep(c, id)
 	}
 }
 
