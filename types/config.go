@@ -16,7 +16,7 @@ type config struct {
 var Config config
 
 func Loadconfig() {
-	file, err := os.ReadFile("./config.json")
+	file, err := os.ReadFile("config.json")
 	if err != nil {
 		log.Fatal("Fehler beim Lesen der JSON: ", err)
 	}
