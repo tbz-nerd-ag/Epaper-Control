@@ -1,6 +1,7 @@
 package mqtt
 
 import (
+	"Control/types"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -39,8 +40,9 @@ func onAwake(c mqtt.Client, msg mqtt.Message) {
 
 	fmt.Printf("EPD %s ist wach!\n", id)
 	time.Sleep(5 * time.Second)
-	wartung := false
-	if wartung {
+
+	//if wartung is enable send wartungs image
+	if types.Config.Wartung {
 		imageData, err := loadImage("mqtt/wartung.png")
 
 		if err != nil {
@@ -55,7 +57,7 @@ func onAwake(c mqtt.Client, msg mqtt.Message) {
 		token.Wait()
 
 		time.Sleep(5 * time.Second)
-		sendsleep(c, id)
+		sendsleep(c, id, types.Config.Wartung_sleep_time)
 	} else {
 		hexDir := "handler/image_hex"
 		data, err := os.ReadFile(filepath.Join(hexDir, "2.105.hex"))
@@ -82,7 +84,7 @@ func onAwake(c mqtt.Client, msg mqtt.Message) {
 		token.Wait()
 
 		time.Sleep(5 * time.Second)
-		sendsleep(c, id)
+		sendsleep(c, id, types.Config.Sleep_time)
 	}
 }
 
@@ -104,9 +106,9 @@ func onGN(c mqtt.Client, msg mqtt.Message) {
 	fmt.Printf("Wacht auf um: %s\n", wakeTime.Format("15:04:05"))
 }
 
-func sendsleep(c mqtt.Client, id string) {
+func sendsleep(c mqtt.Client, id string, time int) {
 	responseTopic := id + "/sleep"
-	sekunden := 10 * 60
+	sekunden := time * 60
 
 	send := c.Publish(responseTopic, 0, false, fmt.Sprintf("%d", sekunden))
 	send.Wait()

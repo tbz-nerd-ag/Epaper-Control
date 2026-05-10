@@ -3,6 +3,7 @@ package main
 import (
 	"Control/handler"
 	"Control/mqtt"
+	"Control/types"
 	"Control/untis"
 	"fmt"
 
@@ -10,7 +11,7 @@ import (
 )
 
 func main() {
-
+	types.Loadconfig()
 	// pause 09:40 - 10:00
 	// 11:30 - 11:45
 	// 13:15 - 13:45
@@ -19,7 +20,7 @@ func main() {
 
 	c := cron.New()
 
-	c.AddFunc("*/2 * * * *", func() {
+	c.AddFunc(types.Config.Task_time_cron, func() {
 		fmt.Println("Cron wird ausgeführt")
 		untis.Get_room_from_json()
 		handler.PrepareJSON()
