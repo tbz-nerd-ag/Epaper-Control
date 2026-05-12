@@ -2,5 +2,7 @@
   "wartung": true,
   "wartung_sleep_time": 20,
   "sleep_time": 30,
-  "task_time_cron": "*/25 * * * *"
+  "task_time_cron": [
+    "*/25 * * * *"
+  ]
 }
