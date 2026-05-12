@@ -6,12 +6,17 @@ import (
 	"Control/types"
 	"Control/untis"
 	"fmt"
+	"time"
 
 	"github.com/robfig/cron/v3"
 )
 
 func main() {
+	time.Sleep(500)
 	types.Loadconfig()
+	untis.Get_room_from_json()
+	handler.PrepareJSON()
+	handler.Getpicturehex()
 	// pause 09:40 - 10:00
 	// 11:30 - 11:45
 	// 13:15 - 13:45

@@ -51,6 +51,7 @@ func onAwake(c mqtt.Client, msg mqtt.Message) {
 		}
 
 		responseTopic := id + "/image"
+		fmt.Println("Wartungsmodus ist aktiv")
 
 		token := c.Publish(responseTopic, 0, false, imageData)
 		fmt.Printf("Bild gesendet an %s\n", responseTopic)
