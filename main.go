@@ -6,7 +6,6 @@ import (
 	"Control/types"
 	"Control/untis"
 	"fmt"
-	"time"
 
 	"github.com/robfig/cron/v3"
 )
@@ -32,10 +31,4 @@ func main() {
 	c.Start()
 	mqtt.ConnecttoMQTT()
 	//untis.Get_room_from_json()
-
-	time.Sleep(22 * 1000)
-	untis.Get_room_from_json()
-	handler.PrepareJSON()
-	handler.Getpicturehex()
-
 }

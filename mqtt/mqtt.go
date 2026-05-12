@@ -1,7 +1,9 @@
 package mqtt
 
 import (
+	"Control/handler"
 	"Control/types"
+	"Control/untis"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -22,6 +24,11 @@ func ConnecttoMQTT() {
 		panic(token.Error())
 	}
 	subscribe(client)
+
+	time.Sleep(22 * 1000)
+	untis.Get_room_from_json()
+	handler.PrepareJSON()
+	handler.Getpicturehex()
 
 	select {}
 }
