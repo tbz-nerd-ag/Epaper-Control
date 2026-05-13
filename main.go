@@ -12,6 +12,7 @@ import (
 
 func main() {
 	types.Loadconfig()
+	types.Loadepd()
 
 	// pause 09:40 - 10:00
 	// 11:30 - 11:45

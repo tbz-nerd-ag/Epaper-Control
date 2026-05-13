@@ -8,31 +8,29 @@ import (
 	"github.com/fsnotify/fsnotify"
 )
 
-type config struct {
-	Wartung            bool     `json:"wartung"`
-	Wartung_sleep_time int      `json:"wartung_sleep_time"`
-	Sleep_time         int      `json:"sleep_time"`
-	Task_time_cron     []string `json:"task_time_cron"`
+type epd struct {
+	ID   string `json:"id"`
+	Room string `json:"room"`
 }
 
-var Config config
+var EPD epd
 
-func Loadconfig() {
-	loadFromFile()
+func Loadepd() {
+	loadfromfileepd()
 
 	watcher, err := fsnotify.NewWatcher()
 	if err != nil {
 		log.Fatal("Fehler beim Erstellen des Watchers: ", err)
 	}
-	if err := watcher.Add("config.json"); err != nil {
+	if err := watcher.Add("epd.json"); err != nil {
 		log.Fatal("Fehler beim Hinzufügen der Datei: ", err)
 	}
 
 	//subroutine that checks edits of config.json
-	go watchConfig(watcher)
+	go watchEPD(watcher)
 }
 
-func watchConfig(watcher *fsnotify.Watcher) {
+func watchEPD(watcher *fsnotify.Watcher) {
 	defer watcher.Close()
 	for {
 		select {
@@ -53,12 +51,12 @@ func watchConfig(watcher *fsnotify.Watcher) {
 	}
 }
 
-func loadFromFile() {
-	file, err := os.ReadFile("config.json")
+func loadfromfileepd() {
+	file, err := os.ReadFile("epd.json")
 	if err != nil {
 		log.Fatal("Fehler beim Lesen der JSON: ", err)
 	}
-	err = json.Unmarshal(file, &Config)
+	err = json.Unmarshal(file, &EPD)
 	if err != nil {
 		log.Fatal("Fehler beim Lesen der JSON: ", err)
 	}
