@@ -17,7 +17,7 @@ services:
       - ./epaper-control/untis:/root/untis
       - ./epaper-control/mqtt:/root/mqtt
       - ./epaper-control/handler:/root/handler
-      - ./epaper-control/:/root/
+      - ./epaper-control/config.json:/root/config.json
     networks:
       epaper-net:
         ipv4_address: 172.20.0.2
