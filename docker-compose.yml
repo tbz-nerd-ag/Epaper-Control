@@ -8,8 +8,7 @@ networks:
 
 services:
   epaper-control:
-    build:
-      context: ./epaper-control
+    image: epaper-control:v1
     ports:
       - "70:70"
     restart: unless-stopped
@@ -18,6 +17,7 @@ services:
       - ./epaper-control/mqtt:/root/mqtt
       - ./epaper-control/handler:/root/handler
       - ./epaper-control/config.json:/root/config.json
+      - ./epaper-control/epd.json:/root/epd.json
     networks:
       epaper-net:
         ipv4_address: 172.20.0.2
@@ -73,6 +73,9 @@ services:
       - DOCKER_INFLUXDB_INIT_PASSWORD=${INFLUXDB_PASSWORD}
       - DOCKER_INFLUXDB_INIT_ORG=${INFLUXDB_ORG}
       - DOCKER_INFLUXDB_INIT_BUCKET=${INFLUXDB_BUCKET}
+    networks:
+      epaper-net:
+        ipv4_address: 172.20.0.6
   
 volumes:
   influxdb_data:
