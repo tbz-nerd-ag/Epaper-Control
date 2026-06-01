@@ -4,5 +4,6 @@
   "sleep_time": 30,
   "task_time_cron": [
     "*/5 * * * *"
-  ]
+  ],
+  "influxtoken": ""
 }

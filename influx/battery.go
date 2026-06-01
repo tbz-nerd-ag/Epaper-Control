@@ -1,6 +1,7 @@
 package influx
 
 import (
+	"Control/types"
 	"time"
 
 	influxdb2 "github.com/influxdata/influxdb-client-go/v2"
@@ -11,7 +12,7 @@ var influxClient influxdb2.Client
 func InitInflux() {
 	influxClient = influxdb2.NewClient(
 		"http://172.20.0.6:8086",
-		"jdhuezr7384uind3ih8rufh3in°!",
+		types.Config.InfluxToken,
 	)
 }
 
