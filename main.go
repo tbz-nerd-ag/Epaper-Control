@@ -2,6 +2,7 @@ package main
 
 import (
 	"Control/handler"
+	"Control/influx"
 	"Control/mqtt"
 	"Control/types"
 	"Control/untis"
@@ -33,5 +34,6 @@ func main() {
 	}
 	c.Start()
 
+	influx.InitInflux()
 	mqtt.ConnecttoMQTT()
 }

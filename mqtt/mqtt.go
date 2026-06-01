@@ -2,6 +2,7 @@ package mqtt
 
 import (
 	"Control/handler"
+	"Control/influx"
 	"Control/types"
 	"Control/untis"
 	"fmt"
@@ -53,6 +54,10 @@ func onAwake(c mqtt.Client, msg mqtt.Message) {
 	errorcode := payload[2]
 
 	fmt.Printf("EPD %s ist wach, Akku %s%% und ErrorCode %s!\n", id, batterypercent, errorcode)
+
+	battery, _ := strconv.Atoi(batterypercent)
+
+	influx.SaveBatteryInflux(id, battery)
 	time.Sleep(5 * time.Second)
 
 	//if wartung is enable send wartungs image
