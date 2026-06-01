@@ -23,8 +23,7 @@ services:
         ipv4_address: 172.20.0.2
 
   epaper-untis:
-    build:
-      context: ./epaper-untis
+    image: epaper-untis:v1
     env_file:
       - ./epaper-untis/env.env
     ports:
@@ -59,3 +58,21 @@ services:
     networks:
       epaper-net:
         ipv4_address: 172.20.0.5
+
+  influxdb:
+    image: influxdb
+    ports:
+      - "8006:8006"
+    volumes:
+      - influxdb_data:/var/lib/influxdb2
+    env_file:
+      - /influxdb.env
+    environment:
+      - DOCKER_INFLUXDB_INIT_MODE=setup
+      - DOCKER_INFLUXDB_INIT_USERNAME=${INFLUXDB_USERNAME}
+      - DOCKER_INFLUXDB_INIT_PASSWORD=${INFLUXDB_PASSWORD}
+      - DOCKER_INFLUXDB_INIT_ORG=${INFLUXDB_ORG}
+      - DOCKER_INFLUXDB_INIT_BUCKET=${INFLUXDB_BUCKET}
+  
+  volumes:
+    influxdb_data:
