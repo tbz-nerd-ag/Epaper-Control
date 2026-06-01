@@ -66,7 +66,7 @@ services:
     volumes:
       - influxdb_data:/var/lib/influxdb2
     env_file:
-      - /influxdb.env
+      - ./influxdb.env
     environment:
       - DOCKER_INFLUXDB_INIT_MODE=setup
       - DOCKER_INFLUXDB_INIT_USERNAME=${INFLUXDB_USERNAME}
