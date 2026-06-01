@@ -45,7 +45,14 @@ func onAwake(c mqtt.Client, msg mqtt.Message) {
 	}
 	id := parts[0]
 
-	fmt.Printf("EPD %s ist wach!\n", id)
+	payload := strings.Split(string(msg.Payload()), ",")
+	if len(payload) < 3 {
+		return
+	}
+	batterypercent := payload[1]
+	errorcode := payload[2]
+
+	fmt.Printf("EPD %s ist wach, Akku %s%% und ErrorCode %s!\n", id, batterypercent, errorcode)
 	time.Sleep(5 * time.Second)
 
 	//if wartung is enable send wartungs image
