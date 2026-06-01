@@ -62,11 +62,11 @@ services:
   influxdb:
     image: influxdb
     ports:
-      - "8006:8006"
+      - "8086:8086"
     volumes:
       - influxdb_data:/var/lib/influxdb2
     env_file:
-      - ./influxdb.env
+      - ./.env
     environment:
       - DOCKER_INFLUXDB_INIT_MODE=setup
       - DOCKER_INFLUXDB_INIT_USERNAME=${INFLUXDB_USERNAME}
@@ -74,5 +74,5 @@ services:
       - DOCKER_INFLUXDB_INIT_ORG=${INFLUXDB_ORG}
       - DOCKER_INFLUXDB_INIT_BUCKET=${INFLUXDB_BUCKET}
   
-  volumes:
-    influxdb_data:
+volumes:
+  influxdb_data:
