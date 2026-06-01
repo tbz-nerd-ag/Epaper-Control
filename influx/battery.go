@@ -10,7 +10,7 @@ var influxClient influxdb2.Client
 
 func InitInflux() {
 	influxClient = influxdb2.NewClient(
-		"http://localhost:8086",
+		"http://172.20.0.6:8086",
 		"jdhuezr7384uind3ih8rufh3in°!",
 	)
 }
