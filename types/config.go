@@ -13,6 +13,7 @@ type config struct {
 	Wartung_sleep_time int      `json:"wartung_sleep_time"`
 	Sleep_time         int      `json:"sleep_time"`
 	Task_time_cron     []string `json:"task_time_cron"`
+	InfluxToken        string   `json:"influxtoken"`
 }
 
 var Config config
