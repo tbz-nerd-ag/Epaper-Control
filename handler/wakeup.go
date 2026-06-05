@@ -26,9 +26,10 @@ func Getwakeuptime(room string) int {
 	startMinutes := parseTime(nextlesson.StartTime)
 
 	if startMinutes > nowMinutes {
-		return startMinutes
+		return startMinutes - nowMinutes
 	}
-	return parseTime(nextlesson.EndTime)
+	endMinutes := parseTime(nextlesson.EndTime)
+	return endMinutes - nowMinutes
 }
 
 func parseTime(t string) int {

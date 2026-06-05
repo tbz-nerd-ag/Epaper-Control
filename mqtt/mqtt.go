@@ -128,8 +128,8 @@ func onGN(c mqtt.Client, msg mqtt.Message) {
 
 func sendsleep(c mqtt.Client, id string, time int) {
 	responseTopic := id + "/sleep"
-	sekunden := time * 60
-	sekunden = handler.Getwakeuptime("2.105")
+	//sekunden := time * 60
+	sekunden := handler.Getwakeuptime("2.105") * 60
 
 	send := c.Publish(responseTopic, 0, false, fmt.Sprintf("%d", sekunden))
 	send.Wait()
