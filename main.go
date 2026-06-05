@@ -14,12 +14,6 @@ import (
 func main() {
 	types.Loadconfig()
 	types.Loadepd()
-
-	// pause 09:40 - 10:00
-	// 11:30 - 11:45
-	// 13:15 - 13:45
-	// 15:15 - 15:30
-	// 17:00 - 17:15
 	c := cron.New()
 
 	for _, task := range types.Config.Task_time_cron {

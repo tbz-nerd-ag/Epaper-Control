@@ -2,7 +2,8 @@
     "epd": [
         {
             "id": 10,
-            "room": "2.105"
+            "room": "2.105",
+            "nightsleep": false
         }
 
     ]
