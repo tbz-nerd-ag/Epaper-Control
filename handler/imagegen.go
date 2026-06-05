@@ -12,22 +12,9 @@ import (
 	"time"
 )
 
-type Lesson struct {
-	Anzahl      int    `json:"anzahl"`
-	Classroom   string `json:"classroom"`
-	Code        string `json:"code"`
-	Date        string `json:"date"`
-	EndTime     string `json:"end_time"`
-	Klasse      string `json:"klasse"`
-	StartTime   string `json:"start_time"`
-	Subject     string `json:"subject"`
-	Teacher     string `json:"teacher"`
-	RoomChanged bool   `json:"room_changed"`
-}
-
 type Response struct {
-	Lessons []Lesson `json:"lessons"`
-	Room    string   `json:"room"`
+	Lessons []types.Lesson `json:"lessons"`
+	Room    string         `json:"room"`
 }
 
 type ImageResponse struct {
@@ -70,7 +57,7 @@ func PrepareJSON() {
 		//today := now().Format("2006-01-02")
 		today := time.Now().Format("2006-01-02")
 
-		filtered := []Lesson{}
+		filtered := []types.Lesson{}
 		for _, lesson := range resp.Lessons {
 			if lesson.Date == today {
 				filtered = append(filtered, lesson)
