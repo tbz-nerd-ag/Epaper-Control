@@ -7,6 +7,7 @@ RUN go mod download
 
 COPY . .
 RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o main
+RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o token ./rest/token
 
 FROM alpine:latest
 
@@ -14,7 +15,9 @@ RUN apk add --no-cache tzdata
 ENV TZ=Europe/Berlin
 
 WORKDIR /root/
+
 COPY --from=builder /app/main .
+COPY --from=builder /app/token .
 
 EXPOSE 70
 

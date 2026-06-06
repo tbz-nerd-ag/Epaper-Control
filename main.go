@@ -4,10 +4,12 @@ import (
 	"Control/handler"
 	"Control/influx"
 	"Control/mqtt"
+	"Control/rest"
 	"Control/types"
 	"Control/untis"
 	"fmt"
 
+	"github.com/gin-gonic/gin"
 	"github.com/robfig/cron/v3"
 )
 
@@ -28,6 +30,16 @@ func main() {
 	}
 	c.Start()
 
+	r := gin.Default()
+
+	auth := r.Group("/")
+	auth.Use(rest.JWTMiddleware())
+	{
+		auth.GET("/get_wartung", rest.REST_GetWartung)
+	}
+
 	influx.InitInflux()
 	mqtt.ConnecttoMQTT()
+
+	r.Run(":80")
 }
