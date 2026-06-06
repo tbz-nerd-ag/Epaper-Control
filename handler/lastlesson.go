@@ -1,0 +1,23 @@
+package handler
+
+import (
+	"Control/types"
+	"encoding/json"
+	"os"
+)
+
+func IsNightSleep(id string, room string) {
+	data, err := os.ReadFile("handler/cache/" + room + ".json")
+	if err != nil {
+		return
+	}
+	var resp Response
+	if err := json.Unmarshal(data, &resp); err != nil {
+		return
+	}
+	if len(resp.Lessons) == 0 {
+		types.SetNightSleep(id, true)
+	} else {
+		types.SetNightSleep(id, false)
+	}
+}

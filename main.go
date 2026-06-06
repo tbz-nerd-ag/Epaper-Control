@@ -4,22 +4,18 @@ import (
 	"Control/handler"
 	"Control/influx"
 	"Control/mqtt"
+	"Control/rest"
 	"Control/types"
 	"Control/untis"
 	"fmt"
 
+	"github.com/gin-gonic/gin"
 	"github.com/robfig/cron/v3"
 )
 
 func main() {
 	types.Loadconfig()
 	types.Loadepd()
-
-	// pause 09:40 - 10:00
-	// 11:30 - 11:45
-	// 13:15 - 13:45
-	// 15:15 - 15:30
-	// 17:00 - 17:15
 	c := cron.New()
 
 	for _, task := range types.Config.Task_time_cron {
@@ -34,6 +30,16 @@ func main() {
 	}
 	c.Start()
 
+	r := gin.Default()
+
+	auth := r.Group("/")
+	auth.Use(rest.JWTMiddleware())
+	{
+		auth.GET("/get_wartung", rest.REST_GetWartung)
+	}
+
 	influx.InitInflux()
 	mqtt.ConnecttoMQTT()
+
+	r.Run(":80")
 }

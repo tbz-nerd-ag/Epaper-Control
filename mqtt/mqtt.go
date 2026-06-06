@@ -6,8 +6,6 @@ import (
 	"Control/types"
 	"Control/untis"
 	"fmt"
-	"os"
-	"path/filepath"
 	"strconv"
 	"strings"
 	"time"
@@ -58,54 +56,15 @@ func onAwake(c mqtt.Client, msg mqtt.Message) {
 	battery, _ := strconv.Atoi(batterypercent)
 
 	influx.SaveBatteryInflux(id, battery)
-	time.Sleep(5 * time.Second)
 
-	//if wartung is enable send wartungs image
-	if types.Config.Wartung {
-		imageData, err := loadImage("mqtt/wartung.png")
-
-		if err != nil {
-			fmt.Printf("Fehler: %v\n", err)
-			return
-		}
-
-		responseTopic := id + "/image"
-		fmt.Println("Wartungsmodus ist aktiv")
-
-		token := c.Publish(responseTopic, 0, false, imageData)
-		fmt.Printf("Bild gesendet an %s\n", responseTopic)
-		token.Wait()
-
-		time.Sleep(5 * time.Second)
-		sendsleep(c, id, types.Config.Wartung_sleep_time)
+	room := types.GetRoomfromID(id)
+	nightsleep, _ := types.GetNightsleep(room)
+	if nightsleep {
+		SendImage(c, id)
 	} else {
-		hexDir := "handler/image_hex"
-		data, err := os.ReadFile(filepath.Join(hexDir, "2.105.hex"))
-		if err != nil {
-			fmt.Print("Hex nicht lesbar: %w", err)
-		}
-
-		// Hex-String → []byte
-		parts := strings.Split(string(data), ", ")
-		imageBytes := make([]byte, len(parts))
-		for i, p := range parts {
-			p = strings.TrimSpace(p)
-			val, err := strconv.ParseUint(strings.TrimPrefix(p, "0x"), 16, 8)
-			if err != nil {
-				fmt.Print("Hex nicht lesbar: %w", err)
-			}
-			imageBytes[i] = byte(val)
-		}
-		fmt.Printf("Sende %d Bytes an %s/image\n", len(imageBytes), id)
-
-		// Per MQTT senden
-		topic := id + "/image"
-		token := c.Publish(topic, 0, false, imageBytes)
-		token.Wait()
-
-		time.Sleep(5 * time.Second)
-		sendsleep(c, id, types.Config.Sleep_time)
+		sendsleep(c, id)
 	}
+
 }
 
 func onGN(c mqtt.Client, msg mqtt.Message) {
@@ -126,12 +85,23 @@ func onGN(c mqtt.Client, msg mqtt.Message) {
 	fmt.Printf("Wacht auf um: %s\n", wakeTime.Format("15:04:05"))
 }
 
-func sendsleep(c mqtt.Client, id string, time int) {
+func sendsleep(c mqtt.Client, id string) {
 	responseTopic := id + "/sleep"
-	//sekunden := time * 60
-	sekunden := handler.Getwakeuptime("2.105") * 60
+
+	var sekunden int
+
+	//if wartun sleep for 30min if not sleep antil next lesson
+	if !types.Config.Wartung {
+		sekunden = handler.Getwakeuptime(types.GetRoomfromID(id)) * 60
+	} else {
+		sekunden = 30 * 60
+	}
 
 	send := c.Publish(responseTopic, 0, false, fmt.Sprintf("%d", sekunden))
 	send.Wait()
 	fmt.Println("EPD geht schlafen")
+
+	//check if handler/cache/room.json is emtpy = night for epd
+	room := types.GetRoomfromID(id)
+	handler.IsNightSleep(id, room)
 }
