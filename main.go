@@ -31,7 +31,6 @@ func main() {
 	c.Start()
 
 	influx.InitInflux()
-	mqtt.ConnecttoMQTT()
 
 	r := gin.Default()
 
@@ -42,4 +41,6 @@ func main() {
 	}
 
 	r.Run("0.0.0.0:80")
+
+	mqtt.ConnecttoMQTT()
 }
