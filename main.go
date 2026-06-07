@@ -50,6 +50,8 @@ func main() {
 	{
 		auth.GET("/get_wartung", rest.REST_GetWartung)
 		auth.GET("/get_wartung_sleep", rest.REST_GetWartungSleepTime)
+
+		auth.POST("/post_wartung", rest.REST_PostWartung)
 	}
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
