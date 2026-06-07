@@ -20,6 +20,10 @@ services:
       - ./epaper-control/config.json:/root/config.json
       - ./epaper-control/epd.json:/root/epd.json
       - ./epaper-control/secrets:/root/secrets
+    depends_on:
+      - mosquitto
+      - epaper-untis
+      - epaper-imagegen
     networks:
       epaper-net:
         ipv4_address: 172.20.0.2
