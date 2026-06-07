@@ -11,8 +11,19 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/robfig/cron/v3"
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
+
+	_ "Control/docs" // generierte docs
 )
 
+// @title 	DoorSign Control MircoService
+// @version v1.0
+// @host localhost:70 localhost:80
+// @BasePath        /
+// @SecurityDefinitions.apikey BearerAuth
+// @in header
+// @name Authorization
 func main() {
 	types.Loadconfig()
 	types.Loadepd()
@@ -39,6 +50,7 @@ func main() {
 	{
 		auth.GET("/get_wartung", rest.REST_GetWartung)
 	}
+	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	r.Run("0.0.0.0:80")
 
