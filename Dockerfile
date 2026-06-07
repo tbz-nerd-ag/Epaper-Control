@@ -20,5 +20,6 @@ COPY --from=builder /app/main .
 COPY --from=builder /app/token .
 
 EXPOSE 70
+EXPOSE 80
 
 CMD [ "./main" ]
