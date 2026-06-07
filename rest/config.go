@@ -7,12 +7,12 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// @Summary		Maintenance Status
-// @Description	Returns a boolean indicating whether infrastructure maintenance is active.
+// @Summary      Maintenance Status
+// @Description  Returns a boolean indicating whether infrastructure maintenance is active.
 // @Tags         config
 // @Produce      json
 // @Security     BearerAuth
-// @Success      200  {object}  map[string]interface{}
+// @Success      200  {object}  WartungResponse
 // @Failure      401  {object}  map[string]interface{}
 // @Router       /get_wartung [get]
 func REST_GetWartung(c *gin.Context) {
@@ -21,4 +21,26 @@ func REST_GetWartung(c *gin.Context) {
 	})
 }
 
+// @Summary      Maintenance Sleep Time
+// @Description  Returns a int indicating how long a display stays in sleep mode during maintenance.
+// @Tags         config
+// @Produce      json
+// @Security     BearerAuth
+// @Success      200  {object}  WartungSleepResponse
+// @Failure      401  {object}  map[string]interface{}
+// @Router       /get_wartung_sleep [get]
+func REST_GetWartungSleepTime(c *gin.Context) {
+	c.JSON(http.StatusOK, gin.H{
+		"wartung": types.Config.Wartung_sleep_time,
+	})
+}
+
 func REST_SetWartung() {}
+
+type WartungResponse struct {
+	Wartung bool `json:"wartung" example:"false"`
+}
+
+type WartungSleepResponse struct {
+	WartungSleepTime int `json:"wartung_sleep_time" example:"20"`
+}

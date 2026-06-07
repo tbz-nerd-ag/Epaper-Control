@@ -14,10 +14,10 @@ import (
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
 
-	_ "Control/docs" // generierte docs
+	_ "Control/docs"
 )
 
-// @title 	DoorSign Control MircoService
+// @title 	DoorSign Control MircoService API
 // @version v1.0
 // @host localhost:80
 // @BasePath        /
@@ -49,6 +49,7 @@ func main() {
 	auth.Use(rest.JWTMiddleware())
 	{
 		auth.GET("/get_wartung", rest.REST_GetWartung)
+		auth.GET("/get_wartung_sleep", rest.REST_GetWartungSleepTime)
 	}
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
