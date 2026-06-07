@@ -8,7 +8,7 @@ RUN go mod download
 RUN go install github.com/swaggo/swag/cmd/swag@latest
 
 COPY . .
-RUN swag init
+RUN swag init -g /main.go
 
 RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o main
 RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o token ./rest/token
