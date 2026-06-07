@@ -13,7 +13,7 @@ import (
 // @Produce      json
 // @Security     BearerAuth
 // @Success      200  {object}  WartungResponse
-// @Failure      401  {object}  map[string]interface{}
+// @Failure      401  {object}  ErrorResponse
 // @Router       /get_wartung [get]
 func REST_GetWartung(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
@@ -27,7 +27,7 @@ func REST_GetWartung(c *gin.Context) {
 // @Produce      json
 // @Security     BearerAuth
 // @Success      200  {object}  WartungSleepResponse
-// @Failure      401  {object}  map[string]interface{}
+// @Failure      401  {object}  ErrorResponse
 // @Router       /get_wartung_sleep [get]
 func REST_GetWartungSleepTime(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{
@@ -43,4 +43,8 @@ type WartungResponse struct {
 
 type WartungSleepResponse struct {
 	WartungSleepTime int `json:"wartung_sleep_time" example:"20"`
+}
+
+type ErrorResponse struct {
+	Error string `json:"error" example:"Ungültiger Token"`
 }
