@@ -30,6 +30,9 @@ func main() {
 	}
 	c.Start()
 
+	influx.InitInflux()
+	mqtt.ConnecttoMQTT()
+
 	r := gin.Default()
 
 	auth := r.Group("/")
@@ -38,8 +41,5 @@ func main() {
 		auth.GET("/get_wartung", rest.REST_GetWartung)
 	}
 
-	influx.InitInflux()
-	mqtt.ConnecttoMQTT()
-
-	r.Run(":80")
+	r.Run("0.0.0.0:80")
 }
