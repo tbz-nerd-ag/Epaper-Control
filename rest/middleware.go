@@ -33,7 +33,7 @@ func JWTMiddleware() gin.HandlerFunc {
 			return
 		}
 
-		secret, err := os.ReadFile("rest/secrets/" + user + ".key")
+		secret, err := os.ReadFile("/secrets/" + user + ".key")
 		if err != nil {
 			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": "User nicht bekannt"})
 			return
