@@ -11,6 +11,7 @@ services:
     image: epaper-control:v1
     ports:
       - "70:70"
+      - "80:80"
     restart: unless-stopped
     volumes:
       - ./epaper-control/untis:/root/untis
