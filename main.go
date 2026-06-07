@@ -18,7 +18,7 @@ import (
 )
 
 // @title 	DoorSign Control MircoService API
-// @version v1.0
+// @version v1.1
 // @host localhost:80
 // @BasePath        /
 // @SecurityDefinitions.apikey BearerAuth
