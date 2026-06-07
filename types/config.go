@@ -64,3 +64,11 @@ func loadFromFile() {
 		log.Fatal("Fehler beim Lesen der JSON: ", err)
 	}
 }
+
+func SaveConfig() error {
+	data, err := json.MarshalIndent(Config, "", "  ")
+	if err != nil {
+		return err
+	}
+	return os.WriteFile("config.json", data, 0644)
+}
