@@ -19,7 +19,7 @@ import (
 
 // @title 	DoorSign Control MircoService
 // @version v1.0
-// @host localhost:70 localhost:80
+// @host localhost:80
 // @BasePath        /
 // @SecurityDefinitions.apikey BearerAuth
 // @in header
@@ -52,7 +52,7 @@ func main() {
 	}
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
-	r.Run("0.0.0.0:80")
+	go mqtt.ConnecttoMQTT()
 
-	mqtt.ConnecttoMQTT()
+	r.Run("0.0.0.0:80")
 }
