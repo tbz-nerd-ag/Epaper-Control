@@ -94,7 +94,7 @@ func REST_PostWartungSleep(c *gin.Context) {
 }
 
 type badrequest struct {
-	Error bool `json:"error" example:"Ungültige Anfrage"`
+	Error string `json:"error" example:"Ungültige Anfrage"`
 }
 
 type WartungResponse struct {
