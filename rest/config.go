@@ -75,7 +75,7 @@ func REST_PostWartung(c *gin.Context) {
 // @Success      200   {object}  WartungSleepResponse
 // @Failure      400   {object}  badrequest
 // @Failure      401   {object}  ErrorResponse
-// @Router       /set_wartung [post]
+// @Router       /set_wartung_sleep [post]
 func REST_PostWartungSleep(c *gin.Context) {
 	var req WartungSleepResponse
 	if err := c.BindJSON(&req); err != nil {

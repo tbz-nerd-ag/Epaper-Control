@@ -59,7 +59,7 @@ func onAwake(c mqtt.Client, msg mqtt.Message) {
 
 	room := types.GetRoomfromID(id)
 	nightsleep, _ := types.GetNightsleep(room)
-	if nightsleep {
+	if !nightsleep {
 		SendImage(c, id)
 	} else {
 		sendsleep(c, id)
