@@ -18,8 +18,8 @@ import (
 )
 
 // @title 	DoorSign Control MircoService API
-// @version v1.0
-// @host localhost:80
+// @version v1.2
+// @host 192.168.133.50:80
 // @BasePath        /
 // @SecurityDefinitions.apikey BearerAuth
 // @in header
@@ -52,6 +52,7 @@ func main() {
 		auth.GET("/get_wartung_sleep", rest.REST_GetWartungSleepTime)
 
 		auth.POST("/post_wartung", rest.REST_PostWartung)
+		auth.POST("/post_wartung_sleep", rest.REST_PostWartungSleep)
 	}
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
