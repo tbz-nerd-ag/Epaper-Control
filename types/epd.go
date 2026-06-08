@@ -29,7 +29,7 @@ func Loadepd() {
 		log.Fatal("Fehler beim Hinzufügen der Datei: ", err)
 	}
 
-	//subroutine that checks edits of config.json
+	//subroutine that checks edits of epd.json
 	go watchEPD(watcher)
 }
 
@@ -96,7 +96,7 @@ func GetRoomfromID(id string) string {
 }
 
 func SetNightSleep(id string, change bool) error {
-	data, err := os.ReadFile("config.json")
+	data, err := os.ReadFile("epd.json")
 	if err != nil {
 		return err
 	}
@@ -120,7 +120,7 @@ func SetNightSleep(id string, change bool) error {
 		return err
 	}
 
-	return os.WriteFile("config.json", formatted, 0644)
+	return os.WriteFile("epd.json", formatted, 0644)
 }
 
 func GetNightsleep(id string) (bool, error) {
