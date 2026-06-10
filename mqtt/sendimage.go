@@ -34,7 +34,8 @@ func SendImage(c mqtt.Client, id string) {
 		sendsleep(c, id)
 	} else {
 		hexDir := "handler/image_hex"
-		data, err := os.ReadFile(filepath.Join(hexDir, "2.105.hex"))
+		room := types.GetRoomfromID(id)
+		data, err := os.ReadFile(filepath.Join(hexDir, room+".hex"))
 		if err != nil {
 			fmt.Print("Hex nicht lesbar: %w", err)
 		}
