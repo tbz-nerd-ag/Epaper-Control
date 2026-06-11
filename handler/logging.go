@@ -5,8 +5,6 @@ import (
 	"io"
 	"log/slog"
 	"os"
-	"os/signal"
-	"syscall"
 
 	"github.com/robfig/cron/v3"
 	"gopkg.in/natefinch/lumberjack.v2"
@@ -38,11 +36,4 @@ func LoggingHandler() {
 	})
 
 	c.Start()
-
-	quit := make(chan os.Signal, 1)
-	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
-	<-quit
-	c.Stop()
-	willi.Close()
-	logger.Info("Logging stop!")
 }

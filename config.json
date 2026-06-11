@@ -6,7 +6,7 @@
     "*/5 * * * *"
   ],
   "influxtoken": "",
-  "log_filename": "/logs/log.log",
+  "log_filename": "/root/logs/log.log",
   "log_max_age": 30,
   "log_max_backups": 30,
   "log_compress": true
