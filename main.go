@@ -29,10 +29,9 @@ import (
 // @in header
 // @name Authorization
 func main() {
-	handler.LoggingHandler()
-
 	types.Loadconfig()
 	types.Loadepd()
+	handler.LoggingHandler()
 	slog.Info("Loading Config Files finished!")
 
 	c := cron.New()
