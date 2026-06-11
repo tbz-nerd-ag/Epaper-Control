@@ -9,7 +9,6 @@ networks:
 services:
   epaper-control:
     image: epaper-control:v1
-    user: "1004:100" 
     ports:
       - "70:70"
       - "80:80"

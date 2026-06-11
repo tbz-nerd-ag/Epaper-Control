@@ -78,12 +78,17 @@ func onAwake(c mqtt.Client, msg mqtt.Message) {
 }
 
 func onGN(c mqtt.Client, msg mqtt.Message) {
+	topicParts := strings.Split(msg.Topic(), "/")
+	if len(topicParts) < 2 {
+		return
+	}
+	id := topicParts[0]
+
 	// Payload: "goodnight,600"
 	parts := strings.Split(string(msg.Payload()), ",")
 	if len(parts) < 2 {
 		return
 	}
-	id := parts[0]
 
 	seconds, err := strconv.Atoi(parts[1])
 	if err != nil {
