@@ -89,7 +89,7 @@ func REST_PostWartungSleep(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{
-		"wartung_sleep_time": types.Config.Sleep_time,
+		"wartung_sleep_time": types.Config.Wartung_sleep_time,
 	})
 }
 

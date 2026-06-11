@@ -5,5 +5,9 @@
   "task_time_cron": [
     "*/5 * * * *"
   ],
-  "influxtoken": ""
+  "influxtoken": "",
+  "log_filename": "/logs/log.log",
+  "log_max_age": 30,
+  "log_max_backups": 30,
+  "log_compress": true
 }
