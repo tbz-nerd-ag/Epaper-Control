@@ -32,7 +32,7 @@ func LoggingHandler() {
 			logger.Error("log rotation error", "err", err)
 			return
 		}
-		logger.Info("log rotated")
+		slog.Info("log rotated")
 	})
 
 	c.Start()
