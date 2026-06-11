@@ -116,7 +116,7 @@ type WartungResponse struct {
 }
 
 type FileNameResponse struct {
-	FileName bool `json:"log_filename" example:"/root/logs/log.log"`
+	FileName string `json:"log_filename" example:"/root/logs/log.log"`
 }
 
 type WartungSleepResponse struct {
