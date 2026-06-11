@@ -8,11 +8,11 @@ import (
 	"Control/types"
 	"Control/untis"
 	"fmt"
+	"log/slog"
 	"os"
 	"os/signal"
 	"syscall"
 
-	"github.com/bytedance/gopkg/util/logger"
 	"github.com/gin-gonic/gin"
 	"github.com/robfig/cron/v3"
 	swaggerFiles "github.com/swaggo/files"
@@ -33,7 +33,7 @@ func main() {
 
 	types.Loadconfig()
 	types.Loadepd()
-	logger.Info("Loading Config Files finished!")
+	slog.Info("Loading Config Files finished!")
 
 	c := cron.New()
 
