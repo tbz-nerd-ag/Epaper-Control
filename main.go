@@ -9,6 +9,7 @@ import (
 	"Control/untis"
 	"fmt"
 
+	"github.com/bytedance/gopkg/util/logger"
 	"github.com/gin-gonic/gin"
 	"github.com/robfig/cron/v3"
 	swaggerFiles "github.com/swaggo/files"
@@ -27,6 +28,8 @@ import (
 func main() {
 	types.Loadconfig()
 	types.Loadepd()
+	logger.Info("Loading Config Files finished!")
+
 	c := cron.New()
 
 	for _, task := range types.Config.Task_time_cron {
