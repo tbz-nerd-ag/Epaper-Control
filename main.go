@@ -26,6 +26,8 @@ import (
 // @in header
 // @name Authorization
 func main() {
+	handler.LoggingHandler()
+
 	types.Loadconfig()
 	types.Loadepd()
 	logger.Info("Loading Config Files finished!")
