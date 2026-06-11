@@ -8,6 +8,9 @@ import (
 	"Control/types"
 	"Control/untis"
 	"fmt"
+	"os"
+	"os/signal"
+	"syscall"
 
 	"github.com/bytedance/gopkg/util/logger"
 	"github.com/gin-gonic/gin"
@@ -64,4 +67,8 @@ func main() {
 	go mqtt.ConnecttoMQTT()
 
 	r.Run("0.0.0.0:80")
+
+	quit := make(chan os.Signal, 1)
+	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
+	<-quit
 }
