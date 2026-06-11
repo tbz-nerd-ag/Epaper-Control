@@ -48,7 +48,6 @@ func main() {
 		})
 	}
 	c.Start()
-
 	influx.InitInflux()
 
 	r := gin.Default()
@@ -58,6 +57,7 @@ func main() {
 	{
 		auth.GET("/get_wartung", rest.REST_GetWartung)
 		auth.GET("/get_wartung_sleep", rest.REST_GetWartungSleepTime)
+		auth.GET("/get_log_filename", rest.REST_GetLogFileName)
 
 		auth.POST("/post_wartung", rest.REST_PostWartung)
 		auth.POST("/post_wartung_sleep", rest.REST_PostWartungSleep)

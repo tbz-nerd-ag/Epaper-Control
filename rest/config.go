@@ -21,6 +21,20 @@ func REST_GetWartung(c *gin.Context) {
 	})
 }
 
+// @Summary      Log Filename
+// @Description  Returns a string with the filename and the folder location.
+// @Tags         config
+// @Produce      json
+// @Security     BearerAuth
+// @Success      200  {object}  FileNameResponse
+// @Failure      401  {object}  ErrorResponse
+// @Router       /get_log_filename [get]
+func REST_GetLogFileName(c *gin.Context) {
+	c.JSON(http.StatusOK, gin.H{
+		"wartung": types.Config.Log_Filename,
+	})
+}
+
 // @Summary      Maintenance Sleep Time
 // @Description  Returns a int indicating how long a display stays in sleep mode during maintenance.
 // @Tags         config
@@ -99,6 +113,10 @@ type badrequest struct {
 
 type WartungResponse struct {
 	Wartung bool `json:"wartung" example:"false"`
+}
+
+type FileNameResponse struct {
+	FileName string `json:"log_filename" example:"/root/logs/log.log"`
 }
 
 type WartungSleepResponse struct {
