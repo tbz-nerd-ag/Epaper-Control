@@ -8,9 +8,15 @@ import (
 	"fmt"
 	"strconv"
 	"strings"
+	"sync"
 	"time"
 
 	mqtt "github.com/eclipse/paho.mqtt.golang"
+)
+
+var (
+	awakeTimes = make(map[string]time.Time)
+	awakeMu    sync.Mutex
 )
 
 func ConnecttoMQTT() {
@@ -44,6 +50,10 @@ func onAwake(c mqtt.Client, msg mqtt.Message) {
 	}
 	id := parts[0]
 
+	awakeMu.Lock()
+	awakeTimes[id] = time.Now()
+	awakeMu.Unlock()
+
 	payload := strings.Split(string(msg.Payload()), ",")
 	if len(payload) < 3 {
 		return
@@ -73,11 +83,27 @@ func onGN(c mqtt.Client, msg mqtt.Message) {
 	if len(parts) < 2 {
 		return
 	}
+	id := parts[0]
 
 	seconds, err := strconv.Atoi(parts[1])
 	if err != nil {
 		fmt.Printf("Fehler: %v\n", err)
 		return
+	}
+
+	// Zeit messen
+	awakeMu.Lock()
+	start, ok := awakeTimes[id]
+	if ok {
+		delete(awakeTimes, id)
+	}
+	awakeMu.Unlock()
+
+	if ok {
+		duration := time.Since(start)
+		fmt.Printf("EPD %s Refresh-Zeit: %v\n", id, duration)
+		// Optional: in InfluxDB speichern
+		influx.SaveRefreshTimeInflux(id, duration)
 	}
 
 	fmt.Printf("ESP32 schläft für %d Sekunden\n", seconds)

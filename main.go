@@ -7,7 +7,6 @@ import (
 	"Control/rest"
 	"Control/types"
 	"Control/untis"
-	"fmt"
 	"log/slog"
 	"os"
 	"os/signal"
@@ -38,9 +37,11 @@ func main() {
 
 	for _, task := range types.Config.Task_time_cron {
 		task := task
-		fmt.Print(task + " registiert ...")
-		c.AddFunc(task, func() { // task direkt, nicht task.Cron
-			fmt.Println("Cron wird ausgeführt:", task)
+
+		slog.Info(task + " registiert ...")
+
+		c.AddFunc(task, func() {
+			slog.Debug("Cron wird ausgeführt:", task)
 			untis.Get_room_from_json()
 			handler.PrepareJSON()
 			handler.Getpicturehex()
