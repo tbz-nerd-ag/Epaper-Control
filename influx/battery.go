@@ -19,7 +19,7 @@ func InitInflux() {
 func SaveBatteryInflux(id string, battery int) {
 	writeAPI := influxClient.WriteAPI(
 		"epaper",
-		"battery",
+		"display",
 	)
 
 	p := influxdb2.NewPointWithMeasurement("battery").AddTag("device", id).AddField("percent", battery).SetTime(time.Now())
