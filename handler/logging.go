@@ -2,6 +2,7 @@ package handler
 
 import (
 	"Control/types"
+	"io"
 	"log/slog"
 	"os"
 	"os/signal"
@@ -19,7 +20,9 @@ func LoggingHandler() {
 		Compress:   types.Config.Log_compress,
 	}
 
-	logger := slog.New(slog.NewJSONHandler(willi, &slog.HandlerOptions{
+	multiwriter := io.MultiWriter(willi, os.Stdout)
+
+	logger := slog.New(slog.NewJSONHandler(multiwriter, &slog.HandlerOptions{
 		Level: slog.LevelDebug,
 	}))
 
