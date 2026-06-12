@@ -67,8 +67,7 @@ func onAwake(c mqtt.Client, msg mqtt.Message) {
 
 	influx.SaveBatteryInflux(id, battery)
 
-	room := types.GetRoomfromID(id)
-	nightsleep, _ := types.GetNightsleep(room)
+	nightsleep, _ := types.GetNightsleep(id)
 	if !nightsleep {
 		SendImage(c, id)
 	} else {
