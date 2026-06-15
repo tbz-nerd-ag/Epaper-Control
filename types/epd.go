@@ -3,7 +3,7 @@ package types
 import (
 	"encoding/json"
 	"fmt"
-	"log"
+	"log/slog"
 	"os"
 	"strconv"
 
@@ -23,10 +23,12 @@ func Loadepd() {
 
 	watcher, err := fsnotify.NewWatcher()
 	if err != nil {
-		log.Fatal("Fehler beim Erstellen des Watchers: ", err)
+		slog.Error("Fehler beim Erstellen des Watchers", "error", err)
+		os.Exit(1)
 	}
 	if err := watcher.Add("epd.json"); err != nil {
-		log.Fatal("Fehler beim Hinzufügen der Datei: ", err)
+		slog.Error("Fehler beim Hinzufügen der Datei", "error", err)
+		os.Exit(1)
 	}
 
 	//subroutine that checks edits of epd.json
@@ -42,14 +44,14 @@ func watchEPD(watcher *fsnotify.Watcher) {
 				return
 			}
 			if event.Has(fsnotify.Write) || event.Has(fsnotify.Create) {
-				log.Println("epd.json wurde geändert, wird neue eingelesen ...")
+				slog.Info("epd.json geändert, wird neu eingelesen")
 				loadFromFile()
 			}
 		case err, ok := <-watcher.Errors:
 			if !ok {
 				return
 			}
-			log.Println("Watcher-Fehler:", err)
+			slog.Error("Watcher-Fehler", "error", err)
 		}
 	}
 }
@@ -57,11 +59,13 @@ func watchEPD(watcher *fsnotify.Watcher) {
 func loadfromfileepd() {
 	file, err := os.ReadFile("epd.json")
 	if err != nil {
-		log.Fatal("Fehler beim Lesen der JSON: ", err)
+		slog.Error("Fehler beim Lesen der JSON", "error", err)
+		os.Exit(1)
 	}
 	err = json.Unmarshal(file, &EPD)
 	if err != nil {
-		log.Fatal("Fehler beim Lesen der JSON: ", err)
+		slog.Error("Fehler beim Lesen der JSON", "error", err)
+		os.Exit(1)
 	}
 }
 

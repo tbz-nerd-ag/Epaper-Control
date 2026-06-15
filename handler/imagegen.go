@@ -4,8 +4,8 @@ import (
 	"Control/types"
 	"bytes"
 	"encoding/json"
-	"fmt"
 	"io"
+	"log/slog"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -39,7 +39,7 @@ func PrepareJSON() {
 	// Ordner erstellen falls nicht vorhanden
 	err = os.MkdirAll(outputDir, 0755)
 	if err != nil {
-		fmt.Println("Ordner erstellen Err:", err)
+		slog.Error("Ordner konnte nicht erstellt werden:", "error", err)
 		return
 	}
 
@@ -68,7 +68,7 @@ func PrepareJSON() {
 		// JSON formatieren
 		formatted, err := json.MarshalIndent(resp, "", "  ")
 		if err != nil {
-			fmt.Printf("Marshal Fehler %s: %v\n", r.Room, err)
+			slog.Error("Marshal Fehler", "room", r.Room, "error", err)
 			continue
 		}
 
@@ -76,7 +76,7 @@ func PrepareJSON() {
 		filename := filepath.Join(outputDir, r.Room+".json")
 		err = os.WriteFile(filename, formatted, 0644)
 		if err != nil {
-			fmt.Println("Datei schreiben Err:", err)
+			slog.Error("Datei schreiben", "error", err)
 			return
 		}
 
@@ -98,40 +98,40 @@ func Getpicturehex() {
 	//create folder for image hex json
 	err = os.MkdirAll(hexDir, 0755)
 	if err != nil {
-		fmt.Println("Ordner erstellen Err:", err)
+		slog.Error("Ordner konnte nicht erstellt werden:", "error", err)
 		return
 	}
 
 	for _, r := range rooms {
 		formatted, err := os.ReadFile(filepath.Join(outputDir, r.Room+".json"))
 		if err != nil {
-			fmt.Printf("Cache nicht lesbar %s: %v\n", r.Room, err)
+			slog.Error("Cache nicht lesbar", "room", r.Room, "error", err)
 			continue
 		}
 		// generate image
 		httpResp, err := http.Post("http://172.20.0.4:72/generate", "application/json", bytes.NewBuffer(formatted))
 		if err != nil {
-			fmt.Printf("POST Fehler %s: %v\n", r.Room, err)
+			slog.Error("POST Fehler", "room", r.Room, "error", err)
 			continue
 		}
 		defer httpResp.Body.Close()
 		_, err = io.ReadAll(httpResp.Body)
 		if err != nil {
-			fmt.Printf("Antwort lesen Fehler: %v\n", err)
+			slog.Error("Antwort lesen", "error", err)
 			continue
 		}
 
 		// get image hex
 		httpResp, err = http.Get("http://172.20.0.4:72/image?room=" + r.Room)
 		if err != nil {
-			fmt.Println("Fehler:", err)
+			slog.Error("Fehler", "error", err)
 			continue
 		}
 		defer httpResp.Body.Close()
 
 		body, err := io.ReadAll(httpResp.Body)
 		if err != nil {
-			fmt.Printf("Antwort lesen Fehler: %v\n", err)
+			slog.Error("Antwort lesen", "error", err)
 			continue
 		}
 
@@ -140,21 +140,17 @@ func Getpicturehex() {
 		// JSON parsen
 		var imgResp ImageResponse
 		if err := json.Unmarshal(body, &imgResp); err != nil {
-			fmt.Printf("JSON Parse Fehler: %v\n", err)
+			slog.Error("JSON Parse", "error", err)
 			continue
 		}
 
 		// Hex-String direkt speichern
 		filename := filepath.Join(hexDir, r.Room+".hex")
 		if err := os.WriteFile(filename, []byte(imgResp.Image), 0644); err != nil {
-			fmt.Printf("Schreiben Fehler: %v\n", err)
+			slog.Error("Schreiben", "error", err)
 			continue
 		}
-		fmt.Printf("Gespeichert: %s\n", filename)
+		slog.Info("Gespeichert", "file", filename)
 	}
 
-}
-
-func now() time.Time {
-	return time.Date(2026, 5, 11, 0, 0, 0, 0, time.Local)
 }
