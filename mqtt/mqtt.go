@@ -49,7 +49,6 @@ func onAwake(c mqtt.Client, msg mqtt.Message) {
 		return
 	}
 	id := parts[0]
-
 	awakeMu.Lock()
 	awakeTimes[id] = time.Now()
 	awakeMu.Unlock()
@@ -64,16 +63,21 @@ func onAwake(c mqtt.Client, msg mqtt.Message) {
 	fmt.Printf("EPD %s ist wach, Akku %s%% und ErrorCode %s!\n", id, batterypercent, errorcode)
 
 	battery, _ := strconv.Atoi(batterypercent)
-
 	influx.SaveBatteryInflux(id, battery)
 
-	nightsleep, _ := types.GetNightsleep(id)
-	if !nightsleep {
+	room := types.GetRoomfromID(id)
+	wasNight, _ := types.GetNightsleep(id)
+	handler.IsNightSleep(id, room)
+	isNight, _ := types.GetNightsleep(id)
+
+	if !isNight {
 		SendImage(c, id)
+	} else if !wasNight && isNight {
+		SendImage(c, id)
+		sendsleep(c, id)
 	} else {
 		sendsleep(c, id)
 	}
-
 }
 
 func onGN(c mqtt.Client, msg mqtt.Message) {
