@@ -3,7 +3,7 @@ package untis
 import (
 	"Control/types"
 	"encoding/json"
-	"fmt"
+	"log/slog"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -30,7 +30,7 @@ func Get_room_from_json() {
 func Get_data(room string) {
 	resp, err := http.Get("http://172.20.0.3:71/untis?room=" + room)
 	if err != nil {
-		fmt.Println("Untis Mircoservice nicht erreichbar,", err)
+		slog.Error("Untis Microservice nicht erreichbar", "error", err)
 		return
 	}
 	defer resp.Body.Close()
@@ -38,20 +38,20 @@ func Get_data(room string) {
 	var data map[string]interface{}
 	err = json.NewDecoder(resp.Body).Decode(&data)
 	if err != nil {
-		fmt.Println("Json Decoding Err:", err)
+		slog.Error("JSON Decoding", "error", err)
 		return
 	}
 
 	formatted, err := json.MarshalIndent(data, "", "  ")
 	if err != nil {
-		fmt.Println("Json MarshalIndent Err:", err)
+		slog.Error("JSON MarshalIndent", "error", err)
 		return
 	}
 
 	// Ordner erstellen falls nicht vorhanden
 	err = os.MkdirAll(outputDir, 0755)
 	if err != nil {
-		fmt.Println("Ordner erstellen Err:", err)
+		slog.Error("Ordner erstellen", "error", err)
 		return
 	}
 
@@ -59,7 +59,7 @@ func Get_data(room string) {
 	filename := filepath.Join(outputDir, room+".json")
 	err = os.WriteFile(filename, formatted, 0644)
 	if err != nil {
-		fmt.Println("Datei schreiben Err:", err)
+		slog.Error("Datei schreiben", "error", err)
 		return
 	}
 }

@@ -6,6 +6,7 @@ import (
 	"Control/types"
 	"Control/untis"
 	"fmt"
+	"log/slog"
 	"strconv"
 	"strings"
 	"sync"
@@ -60,7 +61,7 @@ func onAwake(c mqtt.Client, msg mqtt.Message) {
 	batterypercent := payload[1]
 	errorcode := payload[2]
 
-	fmt.Printf("EPD %s ist wach, Akku %s%% und ErrorCode %s!\n", id, batterypercent, errorcode)
+	slog.Info("EPD wach", "id", id, "akku", batterypercent, "errorcode", errorcode)
 
 	battery, _ := strconv.Atoi(batterypercent)
 	influx.SaveBatteryInflux(id, battery)
@@ -95,7 +96,7 @@ func onGN(c mqtt.Client, msg mqtt.Message) {
 
 	seconds, err := strconv.Atoi(parts[1])
 	if err != nil {
-		fmt.Printf("Fehler: %v\n", err)
+		slog.Error("Fehler", "error", err)
 		return
 	}
 
@@ -109,14 +110,14 @@ func onGN(c mqtt.Client, msg mqtt.Message) {
 
 	if ok {
 		duration := time.Since(start)
-		fmt.Printf("EPD %s Refresh-Zeit: %v\n", id, duration)
-		// Optional: in InfluxDB speichern
+		slog.Info("EPD Refresh-Zeit", "id", id, "duration", duration)
+
 		influx.SaveRefreshTimeInflux(id, duration)
 	}
 
-	fmt.Printf("ESP32 schläft für %d Sekunden\n", seconds)
+	slog.Info("ESP32 schläft", "seconds", seconds)
 	wakeTime := time.Now().Add(time.Duration(seconds) * time.Second)
-	fmt.Printf("Wacht auf um: %s\n", wakeTime.Format("15:04:05"))
+	slog.Info("Wacht auf um", "time", wakeTime.Format("15:04:05"))
 }
 
 func sendsleep(c mqtt.Client, id string) {
@@ -133,7 +134,7 @@ func sendsleep(c mqtt.Client, id string) {
 
 	send := c.Publish(responseTopic, 0, false, fmt.Sprintf("%d", sekunden))
 	send.Wait()
-	fmt.Println("EPD geht schlafen")
+	slog.Info("EPD geht schlafen")
 
 	//check if handler/cache/room.json is emtpy = night for epd
 	room := types.GetRoomfromID(id)

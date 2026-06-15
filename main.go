@@ -41,7 +41,7 @@ func main() {
 		slog.Info(task + " registiert ...")
 
 		c.AddFunc(task, func() {
-			slog.Debug("Cron wird ausgeführt:", "task", task)
+			slog.Info("Cron wird ausgeführt:", "task", task)
 			untis.Get_room_from_json()
 			handler.PrepareJSON()
 			handler.Getpicturehex()

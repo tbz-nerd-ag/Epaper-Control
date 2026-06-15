@@ -2,7 +2,7 @@ package mqtt
 
 import (
 	"Control/types"
-	"fmt"
+	"log/slog"
 	"os"
 	"path/filepath"
 	"strconv"
@@ -19,15 +19,15 @@ func SendImage(c mqtt.Client, id string) {
 		imageData, err := loadImage("mqtt/wartung.png")
 
 		if err != nil {
-			fmt.Printf("Fehler: %v\n", err)
+			slog.Error("Fehler", "error", err)
 			return
 		}
 
 		responseTopic := id + "/image"
-		fmt.Println("Wartungsmodus ist aktiv")
+		slog.Info("Wartungsmodus aktiv")
 
 		token := c.Publish(responseTopic, 0, false, imageData)
-		fmt.Printf("Bild gesendet an %s\n", responseTopic)
+		slog.Info("Bild gesendet", "topic", responseTopic)
 		token.Wait()
 
 		time.Sleep(5 * time.Second)
@@ -37,7 +37,7 @@ func SendImage(c mqtt.Client, id string) {
 		room := types.GetRoomfromID(id)
 		data, err := os.ReadFile(filepath.Join(hexDir, room+".hex"))
 		if err != nil {
-			fmt.Print("Hex nicht lesbar: %w", err)
+			slog.Error("Hex nicht lesbar", "error", err)
 		}
 
 		// Hex-String → []byte
@@ -47,11 +47,11 @@ func SendImage(c mqtt.Client, id string) {
 			p = strings.TrimSpace(p)
 			val, err := strconv.ParseUint(strings.TrimPrefix(p, "0x"), 16, 8)
 			if err != nil {
-				fmt.Print("Hex nicht lesbar: %w", err)
+				slog.Error("Hex nicht lesbar", "error", err)
 			}
 			imageBytes[i] = byte(val)
 		}
-		fmt.Printf("Sende %d Bytes an %s/image\n", len(imageBytes), id)
+		slog.Info("Sende Bytes", "bytes", len(imageBytes), "id", id)
 
 		// Per MQTT senden
 		topic := id + "/image"

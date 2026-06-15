@@ -2,7 +2,7 @@ package types
 
 import (
 	"encoding/json"
-	"log"
+	"log/slog"
 	"os"
 
 	"github.com/fsnotify/fsnotify"
@@ -26,10 +26,12 @@ func Loadconfig() {
 
 	watcher, err := fsnotify.NewWatcher()
 	if err != nil {
-		log.Fatal("Fehler beim Erstellen des Watchers: ", err)
+		slog.Error("Fehler beim Erstellen des Watchers", "error", err)
+		os.Exit(0)
 	}
 	if err := watcher.Add("config.json"); err != nil {
-		log.Fatal("Fehler beim Hinzufügen der Datei: ", err)
+		slog.Error("Fehler beim Hinzufügen der Datei", "error", err)
+		os.Exit(1)
 	}
 
 	//subroutine that checks edits of config.json
@@ -45,14 +47,14 @@ func watchConfig(watcher *fsnotify.Watcher) {
 				return
 			}
 			if event.Has(fsnotify.Write) || event.Has(fsnotify.Create) {
-				log.Println("config.json wurde geändert, wird neue eingelesen ...")
+				slog.Info("config.json geändert, wird neu eingelesen")
 				loadFromFile()
 			}
 		case err, ok := <-watcher.Errors:
 			if !ok {
 				return
 			}
-			log.Println("Watcher-Fehler:", err)
+			slog.Error("Watcher-Fehler", "error", err)
 		}
 	}
 }
@@ -60,11 +62,13 @@ func watchConfig(watcher *fsnotify.Watcher) {
 func loadFromFile() {
 	file, err := os.ReadFile("config.json")
 	if err != nil {
-		log.Fatal("Fehler beim Lesen der JSON: ", err)
+		slog.Error("Fehler beim Lesen der JSON", "error", err)
+		os.Exit(1)
 	}
 	err = json.Unmarshal(file, &Config)
 	if err != nil {
-		log.Fatal("Fehler beim Lesen der JSON: ", err)
+		slog.Error("Fehler beim Lesen der JSON", "error", err)
+		os.Exit(1)
 	}
 }
 
