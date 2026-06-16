@@ -3,6 +3,7 @@ package handler
 import (
 	"Control/types"
 	"encoding/json"
+	"log/slog"
 	"os"
 )
 
@@ -16,6 +17,7 @@ func IsNightSleep(id string, room string) {
 		return
 	}
 	if len(resp.Lessons) == 0 {
+		slog.Debug("Es gibt kein Unterricht in diesen Raum mehr, für das EPD:", "id", id)
 		types.SetNightSleep(id, true)
 	} else {
 		types.SetNightSleep(id, false)
