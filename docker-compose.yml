@@ -55,7 +55,7 @@ services:
   mosquitto:
     image: eclipse-mosquitto
     ports:
-      - "0.0.0.0:1883:1883"  # ← auf allen Interfaces erreichbar
+      - "0.0.0.0:1883:1883"
       - "0.0.0.0:9001:9001"
     volumes:
       - ./epaper-control/mosquitto/config:/mosquitto/config

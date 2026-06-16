@@ -10,13 +10,14 @@ import (
 	"github.com/fsnotify/fsnotify"
 )
 
-type epd struct {
+type Epd struct {
 	ID         string `json:"id"`
 	Room       string `json:"room"`
 	NightSleep bool   `json:"nightsleep"`
+	Device     string `json:"device"`
 }
 
-var EPD epd
+var EPD Epd
 
 func Loadepd() {
 	loadfromfileepd()
@@ -106,7 +107,7 @@ func SetNightSleep(id string, change bool) error {
 	}
 
 	var config struct {
-		EPD []epd `json:"epd"`
+		EPD []Epd `json:"epd"`
 	}
 	if err := json.Unmarshal(data, &config); err != nil {
 		return err
@@ -134,7 +135,7 @@ func GetNightsleep(id string) (bool, error) {
 	}
 
 	var config struct {
-		EPD []epd `json:"epd"`
+		EPD []Epd `json:"epd"`
 	}
 	if err := json.Unmarshal(data, &config); err != nil {
 		return false, err
