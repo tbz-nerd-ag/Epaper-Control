@@ -3,12 +3,14 @@
         {
             "id": 10,
             "room": "2.105",
-            "nightsleep": false
+            "nightsleep": false,
+            "device": "Crown 4.2"
         },
         {
             "id": 1000,
             "room": "2.311",
-            "nightsleep": false
+            "nightsleep": false,
+            "device": "Sim"
         }
 
     ]

@@ -106,23 +106,3 @@ func REST_PostWartungSleep(c *gin.Context) {
 		"wartung_sleep_time": types.Config.Wartung_sleep_time,
 	})
 }
-
-type badrequest struct {
-	Error string `json:"error" example:"Ungültige Anfrage"`
-}
-
-type WartungResponse struct {
-	Wartung bool `json:"wartung" example:"false"`
-}
-
-type FileNameResponse struct {
-	FileName string `json:"log_filename" example:"/root/logs/log.log"`
-}
-
-type WartungSleepResponse struct {
-	WartungSleepTime int `json:"wartung_sleep_time" example:"20"`
-}
-
-type ErrorResponse struct {
-	Error string `json:"error" example:"Ungültiger Token"`
-}
