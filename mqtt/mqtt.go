@@ -139,6 +139,6 @@ func sendsleep(c mqtt.Client, id string) {
 	slog.Info("EPD geht schlafen")
 
 	//check if handler/cache/room.json is emtpy = night for epd
-	room := types.GetRoomfromID(id)
-	handler.IsNightSleep(id, room)
+	//room := types.GetRoomfromID(id)
+	//handler.IsNightSleep(id, room)
 }
