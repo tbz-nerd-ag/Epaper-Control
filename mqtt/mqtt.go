@@ -71,6 +71,9 @@ func onAwake(c mqtt.Client, msg mqtt.Message) {
 	handler.IsNightSleep(id, room)
 	isNight, _ := types.GetNightsleep(id)
 
+	isNight, err := types.GetNightsleep(id)
+	slog.Debug("NightSleep State", "id", id, "isNight", isNight, "err", err)
+
 	if !isNight {
 		slog.Debug("Es ist normaler Tag und dem EPD wird ein Bild zugesendet!")
 		SendImage(c, id)
