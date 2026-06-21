@@ -69,7 +69,6 @@ func onAwake(c mqtt.Client, msg mqtt.Message) {
 	room := types.GetRoomfromID(id)
 	wasNight, _ := types.GetNightsleep(id)
 	handler.IsNightSleep(id, room)
-	isNight, _ := types.GetNightsleep(id)
 
 	isNight, err := types.GetNightsleep(id)
 	slog.Debug("NightSleep State", "id", id, "isNight", isNight, "err", err)
