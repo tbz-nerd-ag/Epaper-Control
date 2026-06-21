@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log/slog"
 	"os"
+	"sync"
 
 	"github.com/fsnotify/fsnotify"
 )
@@ -15,6 +16,11 @@ type Epd struct {
 	NightSleep bool   `json:"nightsleep"`
 	Device     string `json:"device"`
 }
+
+var (
+	EPDs   []Epd
+	epdsMu sync.RWMutex
+)
 
 func (e *Epd) UnmarshalJSON(b []byte) error {
 	type EpdAlias Epd
@@ -30,8 +36,6 @@ func (e *Epd) UnmarshalJSON(b []byte) error {
 	e.ID = aux.ID.String() // 10 → "10"
 	return nil
 }
-
-var EPDs []Epd
 
 func Loadepd() {
 	loadfromfileepd()
@@ -70,6 +74,7 @@ func watchEPD(watcher *fsnotify.Watcher) {
 }
 
 func loadfromfileepd() {
+	epdsMu.Lock()
 	file, err := os.ReadFile("epd.json")
 	if err != nil {
 		slog.Error("Fehler beim Lesen der JSON", "error", err)
@@ -83,9 +88,13 @@ func loadfromfileepd() {
 		os.Exit(1)
 	}
 	EPDs = config.EPD
+	epdsMu.Unlock()
 }
 
 func GetRoomfromID(id string) string {
+	epdsMu.RLock()
+	defer epdsMu.RUnlock()
+
 	for _, epd := range EPDs {
 		if epd.ID == id {
 			return epd.Room
@@ -95,6 +104,7 @@ func GetRoomfromID(id string) string {
 }
 
 func SetNightSleep(id string, change bool) error {
+	epdsMu.Lock()
 	data, err := os.ReadFile("epd.json")
 	if err != nil {
 		return err
@@ -115,10 +125,14 @@ func SetNightSleep(id string, change bool) error {
 	if err != nil {
 		return err
 	}
+	epdsMu.Unlock()
 	return os.WriteFile("epd.json", formatted, 0644)
 }
 
 func GetNightsleep(id string) (bool, error) {
+	epdsMu.RLock()
+	defer epdsMu.RUnlock()
+
 	for _, entry := range EPDs {
 		if entry.ID == id {
 			return entry.NightSleep, nil
