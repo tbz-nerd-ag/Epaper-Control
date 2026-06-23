@@ -122,6 +122,8 @@ func onGN(c mqtt.Client, msg mqtt.Message) {
 	slog.Info("ESP32 schläft", "seconds", seconds)
 	wakeTime := time.Now().Add(time.Duration(seconds) * time.Second)
 	slog.Info("Wacht auf um", "time", wakeTime.Format("15:04:05"))
+
+	c.Publish(id+"/sleep", 1, true, "")
 }
 
 func sendsleep(c mqtt.Client, id string) {
@@ -136,7 +138,7 @@ func sendsleep(c mqtt.Client, id string) {
 		sekunden = 30 * 60
 	}
 
-	send := c.Publish(responseTopic, 0, false, fmt.Sprintf("%d", sekunden))
+	send := c.Publish(responseTopic, 1, true, fmt.Sprintf("%d", sekunden))
 	send.Wait()
 	slog.Info("EPD geht schlafen")
 

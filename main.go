@@ -58,7 +58,7 @@ func main() {
 		auth.GET("/get_wartung", rest.REST_GetWartung)
 		auth.GET("/get_wartung_sleep", rest.REST_GetWartungSleepTime)
 		auth.GET("/get_log_filename", rest.REST_GetLogFileName)
-		auth.GET("/get_device:id", rest.REST_GetDeviceViaID)
+		auth.GET("/get_device/:id", rest.REST_GetDeviceViaID)
 
 		auth.POST("/post_wartung", rest.REST_PostWartung)
 		auth.POST("/post_wartung_sleep", rest.REST_PostWartungSleep)
