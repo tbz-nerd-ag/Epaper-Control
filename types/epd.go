@@ -6,6 +6,7 @@ import (
 	"log/slog"
 	"os"
 	"sync"
+	"time"
 
 	"github.com/fsnotify/fsnotify"
 )
@@ -54,6 +55,7 @@ func Loadepd() {
 
 func watchEPD(watcher *fsnotify.Watcher) {
 	defer watcher.Close()
+	var timer *time.Timer
 	for {
 		select {
 		case event, ok := <-watcher.Events:
@@ -61,8 +63,13 @@ func watchEPD(watcher *fsnotify.Watcher) {
 				return
 			}
 			if event.Has(fsnotify.Write) || event.Has(fsnotify.Create) {
-				slog.Info("epd.json geändert, wird neu eingelesen")
-				loadfromfileepd()
+				if timer != nil {
+					timer.Stop()
+				}
+				timer = time.AfterFunc(100*time.Millisecond, func() {
+					slog.Info("epd.json geändert, wird neu eingelesen")
+					loadfromfileepd()
+				})
 			}
 		case err, ok := <-watcher.Errors:
 			if !ok {
@@ -105,6 +112,8 @@ func GetRoomfromID(id string) string {
 
 func SetNightSleep(id string, change bool) error {
 	epdsMu.Lock()
+	defer epdsMu.Unlock() // ← defer, nicht manuell vor WriteFile
+
 	data, err := os.ReadFile("epd.json")
 	if err != nil {
 		return err
@@ -125,8 +134,13 @@ func SetNightSleep(id string, change bool) error {
 	if err != nil {
 		return err
 	}
-	epdsMu.Unlock()
-	return os.WriteFile("epd.json", formatted, 0644)
+
+	// Atomisches Schreiben: erst tmp, dann rename
+	tmp := "epd.json.tmp"
+	if err := os.WriteFile(tmp, formatted, 0644); err != nil {
+		return err
+	}
+	return os.Rename(tmp, "epd.json") // atomar auf Linux/macOS
 }
 
 func GetNightsleep(id string) (bool, error) {
