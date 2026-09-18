@@ -58,12 +58,12 @@ func onAwake(c mqtt.Client, msg mqtt.Message) {
 	if len(payload) < 3 {
 		return
 	}
-	batterypercent := payload[1]
+	batteryvolt := payload[1]
 	errorcode := payload[2]
 
-	slog.Info("EPD wach", "id", id, "akku", batterypercent, "errorcode", errorcode)
+	slog.Info("EPD wach", "id", id, "akku", batteryvolt, "errorcode", errorcode)
 
-	battery, _ := strconv.Atoi(batterypercent)
+	battery, _ := strconv.ParseFloat(batteryvolt, 8)
 	influx.SaveBatteryInflux(id, battery)
 
 	room := types.GetRoomfromID(id)
