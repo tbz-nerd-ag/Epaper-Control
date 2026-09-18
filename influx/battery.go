@@ -16,13 +16,13 @@ func InitInflux() {
 	)
 }
 
-func SaveBatteryInflux(id string, battery int) {
+func SaveBatteryInflux(id string, battery float64) {
 	writeAPI := influxClient.WriteAPI(
 		"epaper",
 		"display",
 	)
 
-	p := influxdb2.NewPointWithMeasurement("battery").AddTag("device", id).AddField("percent", battery).SetTime(time.Now())
+	p := influxdb2.NewPointWithMeasurement("battery").AddTag("device", id).AddField("volt", battery).SetTime(time.Now())
 
 	writeAPI.WritePoint(p)
 	writeAPI.Flush()
